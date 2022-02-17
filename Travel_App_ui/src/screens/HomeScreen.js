@@ -1,29 +1,48 @@
 /* eslint-disable semi */
 /* eslint-disable prettier/prettier */
 import React from 'react';
-import {SafeAreaView, ScrollView, StatusBar, StyleSheet, View, Text, TextInput} from 'react-native';
+import {SafeAreaView, ScrollView, StatusBar, StyleSheet, View, Text, TextInput, ImageBackground, FlatList, Dimensions} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import COLOR from '../consts/color';
+import place from '../consts/place';
+const {width} = Dimensions.get('screen');
 
 const HomeScreen = ({navigation}) => {
 
   const categoryIcons = [
-    <Icon name='flight' size={25} color={COLOR.primary}/>,
-    <Icon name='beach-access' size={25} color={COLOR.primary}/>,
-    <Icon name='near-me' size={25} color={COLOR.primary}/>,
-    <Icon name='palce' size={25} color={COLOR.primary}/>,
+    <Icon name="flight" size={25} color={COLOR.primary}/>,
+    <Icon name="beach-access" size={25} color={COLOR.primary}/>,
+    <Icon name="near-me" size={25} color={COLOR.primary}/>,
+    <Icon name="palce" size={25} color={COLOR.primary}/>,
   ];
 
   const ListCategories = () => {
     return (
       <View style={style.categoryContainer}>
         {categoryIcons.map((icon, index) => (
-          <View key={index}>{icon}</View>
-          // 24.00
+          <View key={index} style={style.iconContainer}>{icon}</View>
+
       ))}
     </View>
     );
   };
+
+  const Card = ({place}) => {
+    return <ImageBackground style={style.cardImage} source={place.image}>
+      <Text style={{color: COLOR.white, fontSize: 20, fontWeight: 'bold',marginTop: 10,}}>{place.name}</Text>
+      <View style={{flex: 1, justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center'}}>
+        <View style={{flexDirection: 'row'}}>
+          <Icon name='place' size={20} color={COLOR.white}/>
+          <Text style={{marginLeft: 5, color:COLOR.white}}>{place.location}</Text>
+        </View>
+        <View style={{flexDirection: 'row'}}>
+          <Icon name='star' size={20} color={COLOR.white}/>
+          <Text style={{marginLeft: 5, color:COLOR.white}}>5.0</Text>
+        </View>
+
+      </View>
+    </ImageBackground>
+  }
 
   return <SafeAreaView
   style={{flex:1, backgroundColor: COLOR.white}}>
@@ -33,7 +52,7 @@ const HomeScreen = ({navigation}) => {
       <Icon name="notifications-none" size={28} color = {COLOR.white} />
     </View>
     <ScrollView showsVerticalScrollIndicator={false}>
-      <View style = {{backgroundColor: COLOR.primary, height: 120, paddingHorizontal: 20,}}>
+      <View style = {{backgroundColor: COLOR.primary, height: 120, paddingHorizontal: 20}}>
         <View>
         <Text style={style.headerTitle}>
           Explore the
@@ -42,12 +61,20 @@ const HomeScreen = ({navigation}) => {
           Beautiful Places
         </Text>
         <View style={style.inputConatiner}>
-          <Icon name='search' size={20}/>
-          <TextInput placeholder='Search place' style={{color: COLOR.grey}}/>
+          <Icon name="search" size={20}/>
+          <TextInput placeholder="Search place" style={{color: COLOR.grey}}/>
         </View>
         </View>
       </View>
       <ListCategories/>
+      <Text style={style.sectionTitile}>Places</Text>
+      <View>
+        <FlatList
+        contentContainerStyle={{paddingLeft:20}}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        data={place} renderItem={({item}) => <Card place={item} />}/>
+      </View>
     </ScrollView>
 
   </SafeAreaView>;
@@ -86,7 +113,32 @@ const style = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
   },
-  
+
+  iconContainer: {
+    height: 60,
+    width: 60,
+    backgroundColor: COLOR.secondary,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+  },
+
+  sectionTitile: {
+    marginHorizontal: 20,
+    marginVertical: 20,
+    fontWeight: 'bold',
+    fontSize: 20,
+  },
+
+  cardImage: {
+    height:220,
+    width: width / 2,
+    marginRight: 20,
+    padding: 10,
+    overflow: 'hidden',
+    borderRadius: 10,
+  },
+
 });
 
 export default HomeScreen;
