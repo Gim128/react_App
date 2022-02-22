@@ -1,7 +1,9 @@
+/* eslint-disable no-unreachable */
+/* eslint-disable react/self-closing-comp */
 /* eslint-disable semi */
 /* eslint-disable prettier/prettier */
 import React from 'react';
-import {SafeAreaView, ScrollView, StatusBar, StyleSheet, View, Text, TextInput, ImageBackground, FlatList, Dimensions} from 'react-native';
+import {SafeAreaView, ScrollView, StatusBar, StyleSheet, View, Text, TextInput, ImageBackground, FlatList, Dimensions, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import COLOR from '../consts/color';
 import place from '../consts/place';
@@ -28,20 +30,48 @@ const HomeScreen = ({navigation}) => {
   };
 
   const Card = ({place}) => {
-    return <ImageBackground style={style.cardImage} source={place.image}>
-      <Text style={{color: COLOR.white, fontSize: 20, fontWeight: 'bold',marginTop: 10,}}>{place.name}</Text>
+    return 
+    <TouchableOpacity activeOpacity={0.8} onPress={()=>navigation.navigate('DetailsScreen', place)}>
+    <ImageBackground style={style.cardImage} source={place.image}>
+      <Text style={{color: COLOR.white, fontSize: 20, fontWeight: 'bold',marginTop: 10}}>{place.name}</Text>
       <View style={{flex: 1, justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center'}}>
         <View style={{flexDirection: 'row'}}>
-          <Icon name='place' size={20} color={COLOR.white}/>
+          <Icon name="place" size={20} color={COLOR.white}/>
           <Text style={{marginLeft: 5, color:COLOR.white}}>{place.location}</Text>
         </View>
         <View style={{flexDirection: 'row'}}>
-          <Icon name='star' size={20} color={COLOR.white}/>
+          <Icon name="star" size={20} color={COLOR.white}/>
           <Text style={{marginLeft: 5, color:COLOR.white}}>5.0</Text>
         </View>
-
+{/* 45:10 */}
       </View>
     </ImageBackground>
+    </TouchableOpacity>
+  }
+
+  const RecomemdedCard = () => {
+    return <ImageBackground style={style.rmCardImg} source={place.image}>
+      <Text style={{color: COLOR.white, fontSize:22, fontWeight:'bold', marginTop:10}}>{place.name}</Text>
+      <View style={{
+        flex: 1,
+        justifyContent: 'space-between',
+        alignItems: 'flex-end',
+      }}>
+        <View style={{width: "100%", flexDirection: 'row', marginTop: 10}}>
+          <View style={{flexDirection: 'row'}}>
+            <Icon name="place" size={22} color={COLOR.white}/>
+            <Text style={{color: COLOR.white, marginLeft: 5}}>{place.location}</Text>
+          </View>
+
+          <View style={{flexDirection: 'row'}}>
+            <Icon name="star" size={22} color={COLOR.white}/>
+            <Text style={{color: COLOR.white, marginLeft: 5}}>5.0</Text>
+          </View>
+         </View>
+         <Text style={{color:COLOR.white, fontSize: 13}}
+         >{place.details}</Text>
+        </View>
+    </ImageBackground>;
   }
 
   return <SafeAreaView
@@ -74,6 +104,15 @@ const HomeScreen = ({navigation}) => {
         horizontal
         showsHorizontalScrollIndicator={false}
         data={place} renderItem={({item}) => <Card place={item} />}/>
+        <Text style = {style.sectionTitile}>Recomended</Text>
+        <FlatList
+        snapToInterval={width - 20}
+        contentContainerStyle={{paddingLeft: 20, paddingBottom: 20}}
+        showsHorizontalScrollIndicator
+        horizontal
+        data={place}
+        renderItem={({item})=> <RecomemdedCard place={item}/>}
+        />
       </View>
     </ScrollView>
 
@@ -137,6 +176,15 @@ const style = StyleSheet.create({
     padding: 10,
     overflow: 'hidden',
     borderRadius: 10,
+  },
+
+  rmCardImg: {
+    width: width - 40,
+    height: 200,
+    marginRight: 20,
+    borderRadius: 10,
+    overflow: 'hidden',
+    padding: 10,
   },
 
 });
